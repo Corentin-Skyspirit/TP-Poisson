@@ -27,4 +27,19 @@ Ici les matrices seront stockées en `Colonne-Major` (plutôt pour Fortran que C
 La dimension principale (`ld`, ou `lda` pour leading dimension of A) permet d'indiquer comment une matrice est stockée en mémoire.
 Elle permet d'indiquer le **nombre d'éléments entre chaque ligne** (en colonne-major) ou chaque colonne (en ligne-major).
 
+### Question 4
 
+La fonction `dgbmv` **effectue une multiplication matrice-vecteur** pour une matrice bande.
+
+### Question 5
+
+La fonction `dgbrtf` effectue la **factorisation LU** d'une matrice bande avec **pivotement partiel**.
+
+### Question 6
+
+La fonction `dgbrts` **résout un système d'équation linéaires** en utilisant la factorisation LU d'une matrice bande préalablement calculée par `dgbrtf`.
+
+### Question 7
+
+La fonction `dgbsv` effectue à **la fois la factorisation LU et la résolution d'un système linéaire**.
+Elle permet de faire en une fonction `dgbrtf` et `dgbrts`.
