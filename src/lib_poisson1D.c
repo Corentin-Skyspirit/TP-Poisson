@@ -47,5 +47,24 @@ int indexABCol(int i, int j, int *lab){
 }
 
 int dgbtrftridiag(int *la, int*n, int *kl, int *ku, double *AB, int *lab, int *ipiv, int *info){
-  return *info;
+  double factor; 
+  *info = 0;    
+  if (*kl != 1 || *ku != 1) {
+    printf("Erreur : La largeur des bandes doit être 1 pour une matrice tridiagonale.\n");
+    *info = -1;
+    return -1; 
+  }
+  for (int i = 0; i < *n - 1; i++) {
+    if (AB[1 + i * (*lab)] == 0.0) { 
+      *info = i + 1; 
+      return -1;
+    }
+    factor = AB[0 + (i + 1) * (*lab)] / AB[1 + i * (*lab)];
+    AB[0 + (i + 1) * (*lab)] = factor; 
+    AB[1 + (i + 1) * (*lab)] -= factor * AB[2 + i * (*lab)];
+  }
+  for (int i = 0; i < *n; i++) {
+    ipiv[i] = i + 1; 
+  }
+  return 0; 
 }

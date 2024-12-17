@@ -72,3 +72,10 @@ Il suffira ensuite de vérifier que le résultat correspond à un **vecteur nul 
 ### Question 2
 
 Les performances de `dgbsv` sont nettement supérieures aux performances de `dgbtrs`. Cela semble logique au vu de la complexité de `dgbsv` qui est inféireure à `dgbtrs` car elle s'effectue sur une martrice bande.
+
+## Exercice 6
+
+### Question 2
+
+Afin de vérifier si notre calcul est correct, il faut commencer par calculer `l'erreur relative`.
+Si cette erreur est inférieure à la limite que nous nous sommes imposé *(par exemple $>10^{-10})$)*, nous pouvons considérer que les calculs sont corrects.
