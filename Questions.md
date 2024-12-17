@@ -43,3 +43,30 @@ La fonction `dgbrts` **résout un système d'équation linéaires** en utilisant
 
 La fonction `dgbsv` effectue à **la fois la factorisation LU et la résolution d'un système linéaire**.
 Elle permet de faire en une fonction `dgbrtf` et `dgbrts`.
+
+### Question 8
+
+Soit R le résidu : $R = b - A\^x$
+
+L'erreur arrière est : 
+$$\frac{||b - A\^x||}{||A||||\^x||}$$
+
+L'erreur avant est : 
+$$\frac{||k||}{||b||} = \frac{||b - A\^x||}{||b||} = \frac{||x - \^x||}{||x||}$$
+
+Pour calculer la norme du vecteur : $n = sqrt(ddot(\&n, x, 1, x, 1))$
+
+Pour calculer $||x - \^x||$ : $daxpy(\&n, x, 1, x, 1) = \^x-x = x$
+
+et $nx = norme(x)$ avec $res = n / nx$
+
+## Exercice 4
+
+### Question 2 & 3
+
+Afin de valider les valeurs obtenues dans la matrice, il faut multiplier un **vecteur unitaire avec AB** avec la méthode `dgbmv`.
+Il suffira ensuite de vérifier que le résultat correspond à un **vecteur nul avec un 1 à chaque extrémités**.
+
+## Exercice 5
+
+

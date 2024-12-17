@@ -88,4 +88,4 @@ docker_build:
 	docker build . -f docker/Dockerfile -t arlong
 
 docker_run:
-	docker run -ti --rm arlong
+	docker run -ti --rm -v .:/app arlong
