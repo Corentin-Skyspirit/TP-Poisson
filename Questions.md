@@ -69,4 +69,6 @@ Il suffira ensuite de vérifier que le résultat correspond à un **vecteur nul 
 
 ## Exercice 5
 
+### Question 2
 
+Les performances de `dgbsv` sont nettement supérieures aux performances de `dgbtrs`. Cela semble logique au vu de la complexité de `dgbsv` qui est inféireure à `dgbtrs` car elle s'effectue sur une martrice bande.

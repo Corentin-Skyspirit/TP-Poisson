@@ -1,0 +1,6 @@
+{
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.associations": {
+        "lib_poisson1d.h": "c"
+    }
+}

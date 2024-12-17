@@ -67,9 +67,11 @@ int main(int argc,char *argv[])
 
   printf("Solution with LAPACK\n");
   ipiv = (int *) calloc(la, sizeof(int));
-
+  
+  clock_t start, end;
   /* LU Factorization */
   if (IMPLEM == TRF) {
+    start = clock();
     dgbtrf_(&la, &la, &kl, &ku, AB, &lab, ipiv, &info);
   }
 
@@ -82,6 +84,8 @@ int main(int argc,char *argv[])
     /* Solution (Triangular) */
     if (info==0){
       dgbtrs_("N", &la, &kl, &ku, &NRHS, AB, &lab, ipiv, RHS, &la, &info);
+      end = clock();
+      printf("Time for execution with dgbtrs : %lf\n", (double)(end - start));
       if (info!=0){printf("\n INFO DGBTRS = %d\n",info);}
     }else{
       printf("\n INFO = %d\n",info);
@@ -90,7 +94,15 @@ int main(int argc,char *argv[])
 
   /* It can also be solved with dgbsv */
   if (IMPLEM == SV) {
-    // TODO : use dgbsv
+    if (IMPLEM == SV) {
+      start = clock();
+      dgbsv_(&la, &kl, &ku, &NRHS, AB, &lab, ipiv, RHS, &la, &info);
+      end = clock();
+      printf("Time for execution with dgbsv : %lf\n", (double)(end - start));
+      if (info != 0) {
+        printf("\n INFO DGBSV = %d\n", info);
+      }
+    }
   }
 
   write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "LU.dat");
