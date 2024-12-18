@@ -31,19 +31,38 @@ void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *k
 }
 
 void set_dense_RHS_DBC_1D(double* RHS, int* la, double* BC0, double* BC1){
+  int a;
+  RHS[0]= *BC0;
+  RHS[(*la)-1]= *BC1;
+  for (a=1;a<(*la)-1;a++){
+    RHS[a]=0.0;
+  }
 }  
 
 void set_analytical_solution_DBC_1D(double* EX_SOL, double* X, int* la, double* BC0, double* BC1){
+  int a;
+  double h, DELTA_T;
+  DELTA_T=(*BC1)-(*BC0);
+  for (a=0;a<(*la);a++){
+    EX_SOL[a] = (*BC0) + X[a]*DELTA_T;
+  }
 }  
 
 void set_grid_points_1D(double* x, int* la){
+  int a;
+  double h;
+  h=1.0/(1.0*((*la)+1));
+  for (a=0;a<(*la);a++){
+    x[a]=(a+1)*h;
+  }
 }
 
 double relative_forward_error(double* x, double* y, int* la){
+  return 0;
 }
 
 int indexABCol(int i, int j, int *lab){
-  return 0;
+  return j*(*lab)+i;
 }
 
 int dgbtrftridiag(int *la, int*n, int *kl, int *ku, double *AB, int *lab, int *ipiv, int *info){
