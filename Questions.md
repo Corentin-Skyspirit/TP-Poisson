@@ -71,7 +71,7 @@ Il suffira ensuite de vérifier que le résultat correspond à un **vecteur nul 
 
 ### Question 2
 
-Les performances de `dgbsv` sont nettement supérieures aux performances de `dgbtrs`. Cela semble logique au vu de la complexité de `dgbsv` qui est inféireure à `dgbtrs` car elle s'effectue sur une martrice bande.
+Les performances de `dgbsv` sont égales aux performances de `dgbtrs`. Cela semble logique vu que `dgbsv` utilise `dgbtrs` et `dgbtrf`, leur complexité est donc similaire.
 
 ## Exercice 6
 

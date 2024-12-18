@@ -73,6 +73,7 @@ int main(int argc,char *argv[])
   if (IMPLEM == TRF) {
     start = clock();
     dgbtrf_(&la, &la, &kl, &ku, AB, &lab, ipiv, &info);
+    end = clock();
   }
 
   /* LU for tridiagonal matrix  (can replace dgbtrf_) */
@@ -83,9 +84,11 @@ int main(int argc,char *argv[])
   if (IMPLEM == TRI || IMPLEM == TRF){
     /* Solution (Triangular) */
     if (info==0){
+      double first_time = end - start;
+      start = clock();
       dgbtrs_("N", &la, &kl, &ku, &NRHS, AB, &lab, ipiv, RHS, &la, &info);
       end = clock();
-      printf("Time for execution with dgbtrs : %lf\n", (double)(end - start));
+      printf("Time for execution with dgbtrs : %lf\n", (double)(end - start + first_time));
       if (info!=0){printf("\n INFO DGBTRS = %d\n",info);}
     }else{
       printf("\n INFO = %d\n",info);
