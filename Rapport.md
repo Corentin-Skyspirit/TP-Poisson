@@ -95,8 +95,6 @@ Cela semble logique étant donné que `dgbsv` utilise dans son fonctionnement `d
 
 ## Exercice 6
 
-### Question 2
-
 L'implémentation de la factorisation LU pour les matrices tridiagonales stockées en matrices bandes a été effectué comme suit :
 
 ```c
@@ -134,6 +132,8 @@ La complexité en esapce est également très bonne car les matrices bandes n'on
 
 Afin de vérifier si notre calcul est correct, il faut commencer par calculer `l'erreur relative`.
 Si cette erreur est inférieure à la limite que nous nous sommes imposé *(par exemple $>10^{-10})$)*, nous pouvons considérer que les calculs sont corrects.
+
+On peut également valider l'implémentation de `dgbtrftridiag` en multipliant la matrice L et U obtenues après l'appel à la fonction. On vérifiera alors que le résultat est bien la matrice originale.
 
 # Méthode de résolution Itérative
 
