@@ -96,3 +96,57 @@ void write_xy(double* vec, double* x, int* la, char* filename){
     perror(filename);
   } 
 }  
+
+void plot_convergence_history(double* vec, int size, char* filename) {
+  const char* prefix = "convergence_";
+  const char* filename_full = filename + strlen(prefix);
+
+  printf("Plotting the convergence history of %s method", filename_full);
+
+  char data_filename[256];
+  snprintf(data_filename, sizeof(data_filename), "%s_data.dat", filename);
+
+  FILE* data_file = fopen(data_filename, "w");
+  if (!data_file) {
+    perror("Error opening data file");
+    return;
+  }
+
+  for (int i = 0; i < size; i++) {
+    fprintf(data_file, "%d %lf\n", i, vec[i]);
+  }
+  fclose(data_file);
+
+  char gnuplot_script[10000];
+  snprintf(gnuplot_script, sizeof(gnuplot_script),
+    "set terminal png size 800,600;\n"
+    "set output '%s.png';\n"
+    "set title 'Convergence de la méthode de %s';\n"
+    "set xlabel 'Itérations';\n"
+    "set ylabel 'Erreur avant';\n"
+    "plot '%s' using 1:2 with lines title 'Erreur';\n",
+    filename,
+    filename_full,
+    data_filename);
+
+  char script_filename[256];
+  snprintf(script_filename, sizeof(script_filename), "%s_script.gnuplot", filename);
+
+  FILE* script_file = fopen(script_filename, "w");
+  if (!script_file) {
+    perror("Error opening gnuplot script file");
+    return;
+  }
+  fprintf(script_file, "%s", gnuplot_script);
+  fclose(script_file);
+
+  char command[512];
+  snprintf(command, sizeof(command), "gnuplot %s", script_filename);
+  int res = system(command);
+  if (res) {
+    perror("Error while running gnuplot");
+  }
+
+  remove(data_filename); 
+  remove(script_filename); 
+}

@@ -33,16 +33,16 @@ La fonction `dgbmv` **effectue une multiplication matrice-vecteur** pour une mat
 
 ### Question 5
 
-La fonction `dgbrtf` effectue la **factorisation LU** d'une matrice bande avec **pivotement partiel**.
+La fonction `dgbtrf` effectue la **factorisation LU** d'une matrice bande avec **pivotement partiel**.
 
 ### Question 6
 
-La fonction `dgbrts` **résout un système d'équation linéaires** en utilisant la factorisation LU d'une matrice bande préalablement calculée par `dgbrtf`.
+La fonction `dgbtrs` **résout un système d'équation linéaires** en utilisant la factorisation LU d'une matrice bande préalablement calculée par `dgbtrf`.
 
 ### Question 7
 
 La fonction `dgbsv` effectue à **la fois la factorisation LU et la résolution d'un système linéaire**.
-Elle permet de faire en une fonction `dgbrtf` et `dgbrts`.
+Elle permet de faire en une fonction `dgbtrf` et `dgbtrs`.
 
 ### Question 8
 

@@ -66,7 +66,7 @@ double relative_forward_error(double* x, double* y, int* la){
 }
 
 int indexABCol(int i, int j, int *lab){
-  return j*(*lab)+i;
+  return (j + 1) * (*lab - 1) + i - 1;
 }
 
 int dgbtrftridiag(int *la, int*n, int *kl, int *ku, double *AB, int *lab, int *ipiv, int *info){

@@ -78,7 +78,7 @@ int main(int argc,char *argv[])
 
   /* Computation of optimum alpha */
   opt_alpha = richardson_alpha_opt(&la);
-  printf("Optimal alpha for simple Richardson iteration is : %lf",opt_alpha); 
+  printf("Optimal alpha for simple Richardson iteration is : %lf\n",opt_alpha); 
 
   /* Solve */
   double tol=1e-3;
@@ -91,6 +91,8 @@ int main(int argc,char *argv[])
   /* Solve with Richardson alpha */
   if (IMPLEM == ALPHA) {
     richardson_alpha(AB, RHS, SOL, &opt_alpha, &lab, &la, &ku, &kl, &tol, &maxit, resvec, &nbite);
+    plot_convergence_history(resvec, nbite, "convergence_richardsonAlpha");
+    write_vec(resvec, &nbite, "RESVEC_ALPHA.dat");
   }
 
   /* Richardson General Tridiag */
@@ -110,6 +112,9 @@ int main(int argc,char *argv[])
   if (IMPLEM == JAC || IMPLEM == GS) {
     write_GB_operator_colMajor_poisson1D(MB, &lab, &la, "MB.dat");
     richardson_MB(AB, RHS, SOL, MB, &lab, &la, &ku, &kl, &tol, &maxit, resvec, &nbite);
+    if (IMPLEM == JAC) plot_convergence_history(resvec, nbite, "convergence_jacobi");
+    else plot_convergence_history(resvec, nbite, "convergence_gaussSeidel");
+    write_vec(resvec, &nbite, "RESVEC_MB.dat");
   }
 
   /* Write solution */

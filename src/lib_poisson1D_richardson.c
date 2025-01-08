@@ -14,27 +14,11 @@ void eig_poisson1D(double* eigval, int *la){
 }
 
 double eigmax_poisson1D(int *la){
-	double* eigval = (double*)malloc(*la * sizeof(double));
-	eig_poisson1D(eigval, la);
-	double eigmax = eigval[0];
-	for (int i = 1; i < *la; i++) {
-		if (eigval[i] > eigmax) {
-			eigmax = eigval[i];
-		}
-	}
-	return eigmax;
+  return -2.0*cos((*la)*M_PI/(*la+1)) +2.0;
 }
 
 double eigmin_poisson1D(int *la){
-	double* eigval = (double*)malloc(*la * sizeof(double));
-	eig_poisson1D(eigval, la);
-  double eigmin = eigval[0];
-	for (int i = 1; i < *la; i++) {
-		if (eigval[i] < eigmin) {
-			eigmin = eigval[i];
-		}
-	}
-	return eigmin;
+  return -2.0*cos(M_PI/(*la+1)) +2.0;
 }
 
 double richardson_alpha_opt(int *la){
@@ -42,7 +26,7 @@ double richardson_alpha_opt(int *la){
 }
 
 void richardson_alpha(double *AB, double *RHS, double *X, double *alpha_rich, int *lab, int *la,int *ku, int*kl, double *tol, int *maxit, double *resvec, int *nbite){
-	double* vec = malloc(sizeof(double) * *la);
+	double* vec = malloc(*la * sizeof(double));
 	if (vec == NULL) {
 		exit(EXIT_FAILURE);
 	}
@@ -52,55 +36,72 @@ void richardson_alpha(double *AB, double *RHS, double *X, double *alpha_rich, in
 	double norm_res = cblas_dnrm2(*la, vec, 1) / cblas_dnrm2(*la, RHS, 1);
 	resvec[0] = norm_res;
 
-	int iter = 1;
-	for (iter = 1; iter < *maxit; ++iter) {
+	int i = 1;
+	for (i = 1; i < *maxit; ++i) {
 		cblas_daxpy(*la, *alpha_rich, vec, 1, X, 1);
 		memcpy(vec, RHS, *la * sizeof(double));
 		cblas_dgbmv(CblasColMajor, CblasNoTrans, *la, *la, *kl, *ku, -1.0, AB, *lab, X, 1, 1.0, vec, 1);
 
 		norm_res = cblas_dnrm2(*la, vec, 1) / cblas_dnrm2(*la, RHS, 1);
-		resvec[iter] = norm_res;
+		resvec[i] = norm_res;
 
 		if (norm_res < *tol) {
 			break;
 		}
 	}
-	*nbite = iter;
+	*nbite = i;
 	free(vec);
 }
 
 void extract_MB_jacobi_tridiag(double *AB, double *MB, int *lab, int *la,int *ku, int*kl, int *kv){
+  for (int i = 0; i < *la; i++) {
+    for (int j = 0; j < *lab; j++) {
+      int ind = (*lab)*i;
+      MB[ind + j] = 0.0;
+    }
+    int ind = ((*lab)*i) + (*ku);
+    MB[ind] = AB[ind];
+  }
 }
 
 void extract_MB_gauss_seidel_tridiag(double *AB, double *MB, int *lab, int *la,int *ku, int*kl, int *kv){
+  for (int i=0; i<*la; i++){
+    MB[*lab * i +1] = AB[i * (*lab) + 1];
+    MB[*lab * i + 2] = AB[i*(*lab)+2];
+  }
 }
 
 void richardson_MB(double *AB, double *RHS, double *X, double *MB, int *lab, int *la,int *ku, int*kl, double *tol, int *maxit, double *resvec, int *nbite){
-	X = calloc(*la, *la * sizeof(double));
-	double* vec = malloc(sizeof(double) * *la);
-	if (vec == NULL) {
-		exit(EXIT_FAILURE);
-	}
+	double* rk = malloc(sizeof(double) * (*la));
+  double norm_B = cblas_dnrm2(*la, RHS, 1);
+  double inv_norm = 1 / norm_B;
+  double norm = 0.0;
+  int* ipiv = malloc(sizeof(int) * (*la));
+  int info = 0;
+  int NHRS = 1;
+  int kuu = (*ku)-1;
 
-	memcpy(vec, RHS, *la * sizeof(double));
-	cblas_dgbmv(CblasColMajor, CblasNoTrans, *la, *la, *kl, *ku, -1.0, AB, *lab, X, 1, 1.0, vec, 1);
-	double norm_res = cblas_dnrm2(*la, vec, 1) / cblas_dnrm2(*la, RHS, 1);
-	resvec[0] = norm_res;
+  dgbtrf_(la, la, kl, &kuu, MB, lab, ipiv, &info);
+  for ((*nbite) = 0; (*nbite) < (*maxit); (*nbite)++) {
 
-	int iter = 1;
-	for (iter = 1; iter < *maxit; ++iter) {
-		cblas_dgbmv(CblasColMajor, CblasNoTrans, *la, *la, *kl, *ku, 1.0, MB, *lab, vec, 1, 1.0, X, 1);
-		memcpy(vec, RHS, *la * sizeof(double));
-		cblas_dgbmv(CblasColMajor, CblasNoTrans, *la, *la, *kl, *ku, -1.0, AB, *lab, X, 1, 1.0, vec, 1);
-		norm_res = cblas_dnrm2(*la, vec, 1) / cblas_dnrm2(*la, RHS, 1);
-		resvec[iter] = norm_res;
+    for (int i = 0; i < (*la); i++) {
+      rk[i] = RHS[i];
+    }
 
-		if (norm_res < *tol) {
-			break;
-		}
-	}
+    cblas_dgbmv(CblasColMajor, CblasNoTrans, *la, *la, *kl, *ku, -1.0, AB, *lab, X, 1, 1.0, rk, 1);
 
-	*nbite = iter;
-	free(vec);
+    norm = cblas_dnrm2(*la, rk, 1) * inv_norm;
+    resvec[(*nbite)] = norm;
+
+    dgbtrs_("N", la, kl, &kuu, &NHRS, MB, lab, ipiv, rk, la, &info);
+
+    cblas_daxpy(*la, 1, rk, 1, X, 1);
+
+    if (norm <= (*tol))
+      break;
+  }
+
+  free(rk);
+  free(ipiv);
 }
 
