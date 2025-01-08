@@ -82,7 +82,18 @@ Si cette erreur est inférieure à la limite que nous nous sommes imposé *(par 
 
 ## Exercice 7
 
-### Question 2
+### Question 3
+
+![convergence_richardson_alpha](convergence_richardsonAlpha.png)
+
+## Exercice 8
 
 ### Question 3
 
+![convergence_jacobi](convergence_jacobi.png)
+
+## Exercice 9
+
+### Question 3
+
+![convergence_gauss_seidel](convergence_gaussSeidel.png)
