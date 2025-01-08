@@ -5,36 +5,40 @@
 /**********************************************/
 #include "lib_poisson1D.h"
 
-void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv){
+void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv) {
   if (*kv) {
     for (int i = 0; i < *la; i++) {
-      AB[4 * i] = 0;
-      AB[4 * i + 1] = -1;
-      AB[4 * i + 2] = 2;
-      AB[4 * i + 3] = -1;
+      AB[0 + i*4] =  0;
+      AB[1 + i*4] = -1;
+      AB[2 + i*4] =  2;
+      AB[3 + i*4] = -1;
     }
   } else {
     for (int i = 0; i < *la; i++) {
-      AB[3 * i] = -1;
-      AB[3 * i + 1] = 2;
-      AB[3 * i + 2] = -1;
+      AB[0 + i*3] = -1;
+      AB[1 + i*3] =  2;
+      AB[2 + i*3] = -1;
     }
   }
   AB[*kv] = 0;
-  AB[*la * (*lab - 1 + *kv) - 1] = 0;
+  AB[*la**lab-1] = 0;
 }
 
 void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv){
-  for (size_t i = 0; i < *la; i++) {
-    AB[1 + *kv] = 1;
-  }
+	for (int i = 0; i < *la * *lab; i++) {
+		AB[i] = 0;
+	}
+	for (int i = 0; i < *la; i++) {
+		int idx = i * *lab + *kv;
+		AB[idx] = 1;
+	}
 }
 
 void set_dense_RHS_DBC_1D(double* RHS, int* la, double* BC0, double* BC1){
   int a;
   RHS[0]= *BC0;
-  RHS[(*la)-1]= *BC1;
-  for (a=1;a<(*la)-1;a++){
+  RHS[(*la) - 1]= *BC1;
+  for (a = 1; a < (*la) - 1; a++){
     RHS[a]=0.0;
   }
 }  
@@ -58,7 +62,6 @@ void set_grid_points_1D(double* x, int* la){
 }
 
 double relative_forward_error(double* x, double* y, int* la){
-
 	double norme_x = sqrt(cblas_ddot(*la, x, 1, x, 1));
 	cblas_daxpy(*la, -1, y, 1, x, 1);
 	double res_norme = sqrt(cblas_ddot(*la, x, 1, x, 1));
