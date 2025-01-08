@@ -120,9 +120,6 @@ int main(int argc,char *argv[])
   /* Write solution */
   write_vec(SOL, &la, "SOL.dat");
 
-  /* Write convergence history */
-  write_vec(resvec, &nbite, "RESVEC.dat");
-
   free(resvec);
   free(RHS);
   free(SOL);
