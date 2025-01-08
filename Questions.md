@@ -79,3 +79,10 @@ Les performances de `dgbsv` sont égales aux performances de `dgbtrs`. Cela semb
 
 Afin de vérifier si notre calcul est correct, il faut commencer par calculer `l'erreur relative`.
 Si cette erreur est inférieure à la limite que nous nous sommes imposé *(par exemple $>10^{-10})$)*, nous pouvons considérer que les calculs sont corrects.
+
+## Exercice 7
+
+### Question 2
+
+### Question 3
+

@@ -58,7 +58,11 @@ void set_grid_points_1D(double* x, int* la){
 }
 
 double relative_forward_error(double* x, double* y, int* la){
-  return 0;
+
+	double norme_x = sqrt(cblas_ddot(*la, x, 1, x, 1));
+	cblas_daxpy(*la, -1, y, 1, x, 1);
+	double res_norme = sqrt(cblas_ddot(*la, x, 1, x, 1));
+	return res_norme / norme_x;
 }
 
 int indexABCol(int i, int j, int *lab){
